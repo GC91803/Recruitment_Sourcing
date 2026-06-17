@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vertex Recruiting Lead Dashboard</title>
+  <style>
+    :root {
+      --paper: #f5f3ee;
+      --panel: #ffffff;
+      --ink: #12344d;
+      --muted: #5f7077;
+      --line: #d8d1c3;
+      --teal: #0f5d70;
+      --gold: #bc8f2d;
+      --green: #08785f;
+      --amber: #996b12;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap {
+      width: min(1500px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand img {
+      width: 82px;
+      height: 48px;
+      object-fit: contain;
+      object-position: left center;
+      background: white;
+      border-radius: 6px;
+    }
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 2px 0 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    nav button, .ghost {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      color: #284d5f;
+      padding: 0 14px;
+      font-weight: 650;
+    }
+    nav button.active, .primary {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: white;
+    }
+    main {
+      display: grid;
+      gap: 20px;
+      padding: 20px 0 32px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .8fr;
+      gap: 16px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgb(18 52 77 / 8%);
+    }
+    .hero {
+      padding: 24px;
+    }
+    .hero h2 {
+      max-width: 860px;
+      margin: 10px 0 12px;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.1;
+    }
+    .hero p {
+      max-width: 850px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .gold {
+      min-height: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--gold);
+      color: white;
+      padding: 0 18px;
+      font-weight: 800;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .stat {
+      padding: 18px;
+    }
+    .stat span {
+      display: block;
+      color: #6d7c82;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .stat strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 32px;
+      color: var(--teal);
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr .75fr .75fr;
+      gap: 12px;
+      padding: 16px;
+    }
+    label span {
+      display: block;
+      color: #6d7c82;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    input, select {
+      width: 100%;
+      height: 44px;
+      margin-top: 8px;
+      border: 1px solid #cfc8ba;
+      border-radius: 6px;
+      background: white;
+      color: var(--ink);
+      padding: 0 12px;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--teal);
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .table {
+      overflow: hidden;
+    }
+    .thead, .row {
+      display: grid;
+      grid-template-columns: 1.1fr .78fr .75fr .45fr .55fr;
+      gap: 12px;
+      align-items: center;
+    }
+    .thead {
+      background: #f8f6f1;
+      border-bottom: 1px solid #e4ded2;
+      color: #6d7c82;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 14px 16px;
+      text-transform: uppercase;
+    }
+    .row {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #ece7dd;
+      background: white;
+      color: inherit;
+      padding: 16px;
+      text-align: left;
+    }
+    .row:hover, .row.selected {
+      background: #f3f8f8;
+    }
+    .title {
+      display: block;
+      font-weight: 800;
+    }
+    .sub {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .score {
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 850;
+    }
+    .pill {
+      display: inline-flex;
+      border: 1px solid;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .ready { background: #ecfbf6; border-color: #b7ead7; color: #07624e; }
+    .review { background: #fff8e7; border-color: #f1d996; color: var(--amber); }
+    .accepted { background: #eaf4ff; border-color: #b6d8f8; color: #15558a; }
+    aside .head {
+      border-bottom: 1px solid #e4ded2;
+      padding: 20px;
+    }
+    aside .body {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+    }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .mini {
+      border-radius: 6px;
+      background: #f8f6f1;
+      padding: 12px;
+    }
+    .mini span {
+      color: #6d7c82;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .mini strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 22px;
+    }
+    h3, h4 { margin: 0; }
+    h3 { font-size: 27px; line-height: 1.15; }
+    h4 { font-size: 15px; }
+    .copy {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .evidence {
+      border: 1px solid #e4ded2;
+      border-radius: 6px;
+      background: #fbfaf6;
+      padding: 12px;
+    }
+    a {
+      color: var(--teal);
+      font-weight: 750;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .export-note {
+      display: none;
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfaf6;
+      color: #284d5f;
+      padding: 14px;
+      line-height: 1.5;
+    }
+    .export-note.open { display: block; }
+    @media (max-width: 1100px) {
+      .hero-grid, .workspace { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .topbar, .brand { align-items: flex-start; }
+      .topbar { flex-direction: column; }
+      .filters, .stats { grid-template-columns: 1fr; }
+      .table { overflow-x: auto; }
+      .thead, .row { min-width: 850px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">
+        <img src="vertex-logo.jpg" alt="Vertex Education" />
+        <div>
+          <p class="eyebrow">Talent intelligence mock</p>
+          <h1>Recruiting Lead Dashboard</h1>
+        </div>
+      </div>
+      <nav aria-label="Dashboard sections">
+        <button class="active">Leads</button>
+        <button>Sources</button>
+        <button>Review</button>
+        <button>Exports</button>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero-grid">
+      <div class="panel hero">
+        <p class="eyebrow" style="color: var(--teal)">Empowering Schools. Simplifying Operations.</p>
+        <h2>Find charter school operations leaders with source-backed signals.</h2>
+        <p>Demo records use real public school/source context with anonymized candidate identities and masked contacts. The workflow shows how recruiters would review, accept, and export leads.</p>
+        <button class="gold" id="exportButton">Preview export</button>
+        <div class="export-note" id="exportNote">CSV/XLSX preview ready: accepted records, export-ready records, source URLs, masked personal email status, phone signal, school alert flag, and reviewer notes.</div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Lead score</span><strong id="avgScore">84</strong><small>Average demo fit</small></div>
+        <div class="panel stat"><span>Ready</span><strong id="readyCount">2</strong><small>Auto export lane</small></div>
+        <div class="panel stat"><span>Accepted</span><strong id="acceptedCount">1</strong><small>Reviewer approved</small></div>
+      </div>
+    </section>
+    <section class="panel filters">
+      <label><span>Search</span><input id="search" placeholder="Try finance, closure, CBO, operations" /></label>
+      <label><span>State</span><select id="state"><option>All states</option><option>AZ</option><option>CA</option><option>CO</option><option>DC</option><option>TX</option></select></label>
+      <label><span>Signal</span><select id="signal"><option>All signals</option><option>Leadership transition</option><option>School closure</option><option>Finance pressure</option><option>Operations shift</option></select></label>
+      <label><span>Status</span><select id="status"><option>All statuses</option><option>Export-ready</option><option>Needs review</option><option>Accepted</option></select></label>
+    </section>
+    <section class="workspace">
+      <div class="panel table">
+        <div class="thead"><span>Candidate and role</span><span>School/source context</span><span>Signal</span><span>Score</span><span>Status</span></div>
+        <div id="rows"></div>
+      </div>
+      <aside class="panel" id="detail"></aside>
+    </section>
+  </main>
+  <script>
+    const leads = [
+      { id:"VTX-104", personLabel:"Anonymized Candidate A", title:"Former CEO / senior charter network leader", school:"KIPP DC", state:"DC", networkType:"CMO", signal:"Leadership transition", score:94, contactScore:98, sourceConfidence:86, lastSeen:"Nov 18, 2025", status:"Export-ready", email:"personal email verified - masked", phone:"mobile signal found", sourceName:"Washington Post", sourceUrl:"https://www.washingtonpost.com/education/2025/11/18/kipp-dc-founder-susan-schaeffler-steps-down/", snippet:"Public reporting described the founder and CEO of KIPP DC stepping down in early 2026 after long tenure.", keywords:["CEO","charter network","transition","operations"], schoolAlert:"Leadership transition may create near-term needs around finance, HR, and operating continuity." },
+      { id:"VTX-121", personLabel:"Anonymized Candidate B", title:"School founder / executive director profile", school:"Capital Village Public Charter School", state:"DC", networkType:"Single-site charter", signal:"School closure", score:89, contactScore:96, sourceConfidence:84, lastSeen:"Mar 14, 2026", status:"Needs review", email:"personal email verified - masked", phone:"not found", sourceName:"Washington Post", sourceUrl:"https://www.washingtonpost.com/education/2026/03/14/capital-village-charter-school-dc/", snippet:"Public reporting described a D.C. charter school closure tied to enrollment and financial challenges.", keywords:["founder","closure","finance","enrollment"], schoolAlert:"Closure context suggests leadership and operations talent may be entering the market." },
+      { id:"VTX-138", personLabel:"Anonymized Candidate C", title:"Charter system operations leader", school:"Chavez Huerta Preparatory Academy", state:"CO", networkType:"Charter system", signal:"School closure", score:87, contactScore:93, sourceConfidence:88, lastSeen:"Jun 12, 2025", status:"Export-ready", email:"personal email verified - masked", phone:"mobile signal found", sourceName:"Wikipedia source summary", sourceUrl:"https://en.wikipedia.org/wiki/Ch%C3%A1vez_Huerta_Preparatory_Academy", snippet:"Public sources summarized the school's 2025 closure after district and state actions.", keywords:["operations","closure","finance","charter agreement"], schoolAlert:"Closure may indicate displaced operational leadership and finance support needs." },
+      { id:"VTX-149", personLabel:"Anonymized Candidate D", title:"Regional finance / school operations leader", school:"Downtown College Preparatory", state:"CA", networkType:"Charter network", signal:"Finance pressure", score:82, contactScore:91, sourceConfidence:78, lastSeen:"May 2025", status:"Needs review", email:"personal email verified - masked", phone:"not found", sourceName:"San Francisco Chronicle", sourceUrl:"https://www.sfchronicle.com/bayarea/article/san-jose-charter-school-closure-20334288.php", snippet:"Public reporting described closure after enrollment declines and financial challenges.", keywords:["finance","enrollment","closure","network"], schoolAlert:"Financial pressure and closure context may surface experienced finance and operations talent." },
+      { id:"VTX-166", personLabel:"Anonymized Candidate E", title:"Former COO / executive operations profile", school:"IDEA Public Schools", state:"TX", networkType:"Large CMO", signal:"Operations shift", score:78, contactScore:88, sourceConfidence:74, lastSeen:"Public history", status:"Needs review", email:"personal email verified - masked", phone:"mobile signal found", sourceName:"Wikipedia source summary", sourceUrl:"https://en.wikipedia.org/wiki/IDEA_Public_Schools", snippet:"Publicly summarized leadership history includes CEO and COO changes within a large charter network.", keywords:["COO","large CMO","operations","leadership"], schoolAlert:"Large-network operations experience may be relevant for scaling charter systems." },
+      { id:"VTX-173", personLabel:"Anonymized Candidate F", title:"Finance and compliance executive profile", school:"Great Hearts Academies", state:"AZ", networkType:"Multi-state CMO", signal:"Leadership transition", score:75, contactScore:87, sourceConfidence:70, lastSeen:"Public profile context", status:"Accepted", email:"personal email verified - masked", phone:"not found", sourceName:"Wikipedia source summary", sourceUrl:"https://en.wikipedia.org/wiki/Great_Hearts_Academies", snippet:"Public school-network context indicates multi-state scale across Arizona, Texas, and Louisiana.", keywords:["finance","compliance","multi-state","growth"], schoolAlert:"Multi-state growth context is useful for recruiting finance and compliance leaders." }
+    ];
+    const accepted = new Set(["VTX-173"]);
+    let selectedId = "VTX-104";
+    const $ = (id) => document.getElementById(id);
+    function statusFor(lead) { return accepted.has(lead.id) ? "Accepted" : lead.status; }
+    function statusClass(status) { return status === "Accepted" ? "accepted" : status === "Export-ready" ? "ready" : "review"; }
+    function filteredLeads() {
+      const q = $("search").value.toLowerCase();
+      return leads.filter((lead) => {
+        const status = statusFor(lead);
+        const haystack = `${lead.personLabel} ${lead.title} ${lead.school} ${lead.keywords.join(" ")}`.toLowerCase();
+        return ($("state").value === "All states" || lead.state === $("state").value)
+          && ($("signal").value === "All signals" || lead.signal === $("signal").value)
+          && ($("status").value === "All statuses" || status === $("status").value)
+          && haystack.includes(q);
+      });
+    }
+    function render() {
+      const items = filteredLeads();
+      const selected = items.find((lead) => lead.id === selectedId) || items[0] || leads[0];
+      selectedId = selected.id;
+      $("rows").innerHTML = items.map((lead) => {
+        const status = statusFor(lead);
+        return `<button class="row ${lead.id === selected.id ? "selected" : ""}" data-id="${lead.id}">
+          <span><span class="title">${lead.personLabel}</span><span class="sub">${lead.title}</span></span>
+          <span><span class="title">${lead.school}</span><span class="sub">${lead.state} - ${lead.networkType}</span></span>
+          <span>${lead.signal}</span><span class="score">${lead.score}</span>
+          <span><span class="pill ${statusClass(status)}">${status}</span></span>
+        </button>`;
+      }).join("");
+      $("detail").innerHTML = `<div class="head">
+        <p class="eyebrow" style="color: var(--teal)">${selected.id}</p>
+        <h3>${selected.personLabel}</h3>
+        <p class="copy">${selected.title}</p>
+        <span class="pill ${statusClass(statusFor(selected))}">${statusFor(selected)}</span>
+      </div>
+      <div class="body">
+        <div class="mini-grid"><div class="mini"><span>Fit</span><strong>${selected.score}</strong></div><div class="mini"><span>Contact</span><strong>${selected.contactScore}</strong></div><div class="mini"><span>Source</span><strong>${selected.sourceConfidence}</strong></div></div>
+        <section><h4>Evidence</h4><p class="copy">${selected.snippet}</p><a href="${selected.sourceUrl}" target="_blank" rel="noreferrer">Open public source</a></section>
+        <section class="evidence"><h4>Contact provenance</h4><p class="copy">Email: ${selected.email}<br>Phone: ${selected.phone}<br>Source: licensed enrichment placeholder for demo</p></section>
+        <section><h4>School alert</h4><p class="copy">${selected.schoolAlert}</p></section>
+        <section><h4>Matched keywords</h4><div class="tags">${selected.keywords.map((k) => `<span class="tag">${k}</span>`).join("")}</div></section>
+        <div class="actions"><button class="primary" id="acceptLead">Accept lead</button><button class="ghost">Add note</button></div>
+      </div>`;
+      document.querySelectorAll(".row").forEach((row) => row.addEventListener("click", () => { selectedId = row.dataset.id; render(); }));
+      $("acceptLead").addEventListener("click", () => { accepted.add(selected.id); render(); });
+      $("acceptedCount").textContent = leads.filter((lead) => statusFor(lead) === "Accepted").length;
+    }
+    ["search", "state", "signal", "status"].forEach((id) => $(id).addEventListener("input", render));
+    $("exportButton").addEventListener("click", () => $("exportNote").classList.toggle("open"));
+    render();
+  </script>
+</body>
+</html>
